@@ -10,11 +10,11 @@ describe('safeStorage', () => {
       setItem: vi.fn(),
       removeItem: vi.fn(),
     };
-    (global as any).window = { localStorage: localStorageMock };
+    (globalThis as any).window = { localStorage: localStorageMock };
   });
 
   afterEach(() => {
-    delete (global as any).window;
+    delete (globalThis as any).window;
   });
 
   it('uses localStorage when available', () => {

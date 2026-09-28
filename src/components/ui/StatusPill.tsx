@@ -1,18 +1,24 @@
 import { cn } from '../../lib/cn';
 
-export const StatusPill = ({ status, className }: { status: 'upcoming' | 'active' | 'completed' | 'open' | 'in-review' | 'merged', className?: string }) => {
+export const StatusPill = ({ 
+  label,
+  variant, 
+  className 
+}: { 
+  label: string;
+  variant: 'success' | 'warning' | 'blue' | 'neutral';
+  className?: string 
+}) => {
   const variants = {
-    upcoming: "border-warning text-warning",
-    active: "border-success text-success",
-    completed: "border-muted text-muted",
-    open: "border-success text-success",
-    "in-review": "border-warning text-warning bg-warning/10",
-    merged: "border-success bg-success text-accent-fg",
+    success: "border-success text-success bg-success/10",
+    warning: "border-warning text-warning bg-warning/10",
+    blue: "border-blue-500 text-blue-400 bg-blue-500/10",
+    neutral: "border-border text-muted bg-panel-2",
   };
   
   return (
-    <span className={cn("inline-flex items-center px-2 py-0.5 rounded-pill border text-xs font-mono", variants[status], className)}>
-      {status}
+    <span className={cn("inline-flex items-center px-2 py-0.5 rounded-full border text-xs font-mono font-medium", variants[variant], className)}>
+      {label}
     </span>
   );
 };

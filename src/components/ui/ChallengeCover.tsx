@@ -1,55 +1,87 @@
-import { useReducedMotion } from '../../hooks';
-import { motion, useMotionValue, useTransform } from 'framer-motion';
+import { useReducedMotion } from 'framer-motion';
+import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import { djb2, mulberry32 } from '../../lib/hash';
 
-export const ChallengeCover = ({ slug, size = 'sm' }: { slug: string, size?: 'sm' | 'lg' }) => {
+export function ChallengeCover({ slug, size = 'sm' }: { slug: string; size?: 'sm' | 'lg' }) {
   const reduced = useReducedMotion();
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
 
-  const bgX = useTransform(mouseX, [0, 1], [5, -5]);
-  const bgY = useTransform(mouseY, [0, 1], [5, -5]);
-  const fgX = useTransform(mouseX, [0, 1], [-10, 10]);
-  const fgY = useTransform(mouseY, [0, 1], [-10, 10]);
+  const springConfig = { damping: 25, stiffness: 150 };
+  const smoothX = useSpring(mouseX, springConfig);
+  const smoothY = useSpring(mouseY, springConfig);
+
+  const bgX = useTransform(smoothX, [0, 1], [15, -15]);
+  const bgY = useTransform(smoothY, [0, 1], [15, -15]);
+  const fgX = useTransform(smoothX, [0, 1], [-25, 25]);
+  const fgY = useTransform(smoothY, [0, 1], [-25, 25]);
 
   const height = size === 'sm' ? 120 : 200;
 
+  // Deterministic PRNG
+  const rng = mulberry32(djb2(slug));
+  const colors = ['var(--success)', 'var(--accent)', 'var(--warning)', 'var(--border)'];
+  
+  const bgNodes = Array.from({ length: 8 }, () => ({
+    cx: rng() * 100, cy: rng() * 100, r: rng() * 6 + 2,
+    color: colors[Math.floor(rng() * colors.length)]
+  }));
+  
+  const midNodes = Array.from({ length: 6 }, () => ({
+    cx: rng() * 80 + 10, cy: rng() * 80 + 10, r: rng() * 8 + 4,
+    color: colors[Math.floor(rng() * colors.length)]
+  }));
+
+  const fgNodes = Array.from({ length: 4 }, () => ({
+    cx: rng() * 60 + 20, cy: rng() * 60 + 20, r: rng() * 12 + 6,
+    color: colors[Math.floor(rng() * colors.length)]
+  }));
+
+  const renderGraph = (nodes: any[], opacity: number, strokeW: number) => (
+    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice" className="absolute inset-0">
+      {nodes.map((n, i) => {
+        const next = nodes[(i + 1) % nodes.length];
+        if (rng() > 0.3) {
+          return <line key={`l-${i}`} x1={n.cx} y1={n.cy} x2={next.cx} y2={next.cy} stroke={n.color} strokeWidth={strokeW} opacity={opacity} />;
+        }
+        return null;
+      })}
+      {nodes.map((n, i) => (
+        <circle key={`c-${i}`} cx={n.cx} cy={n.cy} r={n.r} fill="var(--panel-2)" stroke={n.color} strokeWidth={strokeW} opacity={opacity + 0.2} />
+      ))}
+    </svg>
+  );
+
   return (
     <div 
-      className="relative w-full overflow-hidden bg-panel-2 border-b border-border" 
-      style={{ height, perspective: 1000 }}
+      className="relative w-full overflow-hidden border-b border-border bg-panel-2" 
+      style={{ height, transformStyle: 'preserve-3d' }}
       onMouseMove={(e) => {
         if (reduced) return;
         const rect = e.currentTarget.getBoundingClientRect();
         mouseX.set((e.clientX - rect.left) / rect.width);
-        mouseX.set((e.clientY - rect.top) / rect.height);
+        mouseY.set((e.clientY - rect.top) / rect.height);
       }}
       onMouseLeave={() => {
         mouseX.set(0.5);
         mouseY.set(0.5);
       }}
-      data-slug={slug}
     >
       <motion.div 
-        className="absolute inset-0 flex items-center justify-center"
+        className="absolute inset-0"
         style={{ x: reduced ? 0 : bgX, y: reduced ? 0 : bgY }}
       >
-        <svg width="100" height="100" viewBox="0 0 100 100" className="text-border opacity-50">
-          <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="2" />
-        </svg>
+        {renderGraph(bgNodes, 0.2, 1)}
       </motion.div>
-      <div className="absolute inset-0 flex items-center justify-center">
-         <svg width="60" height="60" viewBox="0 0 100 100" className="text-muted opacity-80">
-          <rect x="20" y="20" width="60" height="60" fill="none" stroke="currentColor" strokeWidth="4" />
-        </svg>
+      <div className="absolute inset-0">
+        {renderGraph(midNodes, 0.4, 2)}
       </div>
       <motion.div 
-        className="absolute inset-0 flex items-center justify-center"
+        className="absolute inset-0"
         style={{ x: reduced ? 0 : fgX, y: reduced ? 0 : fgY }}
       >
-        <svg width="40" height="40" viewBox="0 0 100 100" className="text-accent">
-          <path d="M10 90 L50 10 L90 90 Z" fill="currentColor" />
-        </svg>
+        {renderGraph(fgNodes, 0.8, 3)}
       </motion.div>
     </div>
   );
-};
+}

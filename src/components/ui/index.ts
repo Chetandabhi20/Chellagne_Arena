@@ -14,3 +14,4 @@ export * from './ChallengeCover';
 export * from './Toast';
 export * from './Countdown';
 export * from './CountUp';
+export * from './ChallengeCard';
