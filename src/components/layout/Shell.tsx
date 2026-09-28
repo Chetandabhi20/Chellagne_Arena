@@ -4,6 +4,7 @@ import { NextActionBar } from './NextActionBar';
 import { StatusLine } from './StatusLine';
 import { TabBar } from './TabBar';
 import { ToastContainer } from '../ui/Toast';
+import { CommandPalette } from './CommandPalette';
 
 export const Shell = () => {
   return (
@@ -16,6 +17,7 @@ export const Shell = () => {
       </main>
       <StatusLine />
       <TabBar />
+      <CommandPalette />
       <ToastContainer />
     </div>
   );

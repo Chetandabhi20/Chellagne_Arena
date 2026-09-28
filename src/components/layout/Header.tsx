@@ -1,11 +1,14 @@
 import { GitBranch } from 'lucide-react';
 import { Link, NavLink } from 'react-router-dom';
 import { useStore } from '../../store/useStore';
+import { usePaletteStore } from '../../store/usePaletteStore';
 import { Kbd } from '../ui/Kbd';
 import { cn } from '../../lib/cn';
 
 export const Header = () => {
   const { theme, setTheme, profile } = useStore();
+  const { setOpen } = usePaletteStore();
+
   return (
     <header className="sticky top-0 z-40 bg-bg border-b border-border h-16 flex items-center justify-between px-4 sm:px-6">
       <div className="flex items-center gap-8">
@@ -22,7 +25,7 @@ export const Header = () => {
         </nav>
       </div>
       <div className="flex items-center gap-4">
-        <button className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-panel border border-border rounded text-sm text-muted hover:text-text focus-ring">
+        <button onClick={() => setOpen(true)} className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-panel border border-border rounded text-sm text-muted hover:text-text focus-ring">
           Search... <Kbd>Ctrl K</Kbd>
         </button>
         <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')} className="text-muted hover:text-text focus-ring rounded p-1">
