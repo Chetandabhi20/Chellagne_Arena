@@ -5,6 +5,7 @@ import { Skeleton } from '../ui';
 // Lazy-loaded solver panels keyed by challenge type
 const QuizSolver = lazy(() => import('./QuizSolver'));
 const LinkSolver = lazy(() => import('./LinkSolver'));
+const CodeSolver = lazy(() => import('./CodeSolver'));
 
 // Placeholder for types not yet implemented
 function NotYetAvailable({ type }: { type: string }) {
@@ -26,13 +27,14 @@ export interface SolverProps {
   draft: unknown;
   onSaveDraft: (payload: unknown) => void;
   lastFeedback?: string[] | null;
+  lastResult?: import('../../engine/types').CheckOutput | null;
 }
 
 // Registry mapping type → component
 const SOLVER_COMPONENTS: Record<ChallengeType, ComponentType<SolverProps> | null> = {
   quiz: QuizSolver as unknown as ComponentType<SolverProps>,
   link: LinkSolver as unknown as ComponentType<SolverProps>,
-  code: null,       // P4
+  code: CodeSolver as unknown as ComponentType<SolverProps>,
   regex: null,      // P6
   frontend: null,   // P6
   'git-terminal': null, // P10 stretch

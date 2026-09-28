@@ -96,9 +96,8 @@ function ChallengeDetailInner({
   const session = useChallengeSession(ch);
   const store = useStore();
   const [lastFeedback, setLastFeedback] = useState<string[] | null>(null);
+  const [lastResult, setLastResult] = useState<import('../engine/types').CheckOutput | null>(null);
   const [showMergedBanner, setShowMergedBanner] = useState(false);
-
-
 
   // Check if the best submission is now merged (for showing the banner)
   const bestSub = bestSubmission(store.submissions, ch.id);
@@ -130,6 +129,7 @@ function ChallengeDetailInner({
     const result = await session.submit(payload);
     if (result) {
       setLastFeedback(result.feedback);
+      setLastResult(result);
     }
   }, [session]);
 
@@ -137,6 +137,7 @@ function ChallengeDetailInner({
     const result = await session.run(payload);
     if (result) {
       setLastFeedback(result.feedback);
+      setLastResult(result);
     }
   }, [session]);
 
@@ -342,6 +343,7 @@ function ChallengeDetailInner({
                   draft={session.draft}
                   onSaveDraft={session.saveDraft}
                   lastFeedback={lastFeedback}
+                  lastResult={lastResult}
                 />
               )}
             </>

@@ -4,6 +4,7 @@ import type { Challenge, Submission } from '../types';
 import type { CheckOutput } from './types';
 import { quizEngine } from './quizEngine';
 import { linkEngine } from './linkEngine';
+import { codeEngine } from './codeEngine';
 import { challengeStatus, attemptsLeft, bestSubmission, prState, challengeSubmissions } from '../lib/selectors';
 import { toast } from '../components/ui/Toast';
 
@@ -13,7 +14,8 @@ function getEngine(type: Challenge['type']) {
   switch (type) {
     case 'quiz': return quizEngine;
     case 'link': return linkEngine;
-    // code, regex, frontend, git-terminal added in later phases
+    case 'code': return codeEngine;
+    // regex, frontend, git-terminal added in later phases
     default: return null;
   }
 }
