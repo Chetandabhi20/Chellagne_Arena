@@ -6,6 +6,8 @@ import { Skeleton } from '../ui';
 const QuizSolver = lazy(() => import('./QuizSolver'));
 const LinkSolver = lazy(() => import('./LinkSolver'));
 const CodeSolver = lazy(() => import('./CodeSolver'));
+const RegexSolver = lazy(() => import('./RegexSolver'));
+const FrontendSolver = lazy(() => import('./FrontendSolver'));
 
 // Placeholder for types not yet implemented
 function NotYetAvailable({ type }: { type: string }) {
@@ -35,8 +37,8 @@ const SOLVER_COMPONENTS: Record<ChallengeType, ComponentType<SolverProps> | null
   quiz: QuizSolver as unknown as ComponentType<SolverProps>,
   link: LinkSolver as unknown as ComponentType<SolverProps>,
   code: CodeSolver as unknown as ComponentType<SolverProps>,
-  regex: null,      // P6
-  frontend: null,   // P6
+  regex: RegexSolver as unknown as ComponentType<SolverProps>,
+  frontend: FrontendSolver as unknown as ComponentType<SolverProps>,
   'git-terminal': null, // P10 stretch
 };
 

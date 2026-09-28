@@ -29,6 +29,7 @@ export interface AppState {
   addSubmission: (submission: Submission) => void;
   incrementAttempts: (challengeId: string) => void;
   addActivity: (entry: ActivityEntry) => void;
+  addDailyResult: (result: DailyResult) => void;
   toggleNotify: (challengeId: string) => void;
   setOrganizerMode: (on: boolean) => void;
   approveSubmission: (submissionId: string) => void;
@@ -129,6 +130,11 @@ export const useStore = create<AppState>()(
       addActivity: (entry) =>
         set((state) => ({
           activity: [...state.activity, entry],
+        })),
+
+      addDailyResult: (result) =>
+        set((state) => ({
+          dailyResults: [...state.dailyResults, result],
         })),
 
       toggleNotify: (challengeId) =>

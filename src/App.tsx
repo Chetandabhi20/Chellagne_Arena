@@ -6,9 +6,12 @@ import { Placeholder } from './pages/Placeholder';
 import { Skeleton } from './components/ui';
 
 import Arena from './pages/Arena';
+import League from './pages/League';
+import Progress from './pages/Progress';
 
 // Lazy-loaded heavy routes
 const ChallengeDetail = lazy(() => import('./pages/ChallengeDetail'));
+const DailyCommit = lazy(() => import('./pages/DailyCommit'));
 
 export default function App() {
   return (
@@ -24,9 +27,9 @@ export default function App() {
               </Suspense>
             }
           />
-          <Route path="daily" element={<Placeholder title="Daily Commit" />} />
-          <Route path="progress" element={<Placeholder title="My Progress" />} />
-          <Route path="leaderboard" element={<Placeholder title="League" />} />
+          <Route path="daily" element={<Suspense fallback={<Skeleton className="h-96 w-full" />}><DailyCommit /></Suspense>} />
+          <Route path="progress" element={<Progress />} />
+          <Route path="leaderboard" element={<League />} />
           <Route path="gallery" element={<Placeholder title="Gallery" />} />
           <Route path="organizer" element={<Placeholder title="Organizer" />} />
           <Route path="404" element={<NotFound />} />
