@@ -10,7 +10,7 @@ export const TabBar = () => {
         { to: '/daily', icon: Calendar, label: 'Daily' },
         { to: '/progress', icon: TrendingUp, label: 'Progress' },
         { to: '/leaderboard', icon: Trophy, label: 'League' },
-        { to: '/more', icon: Menu, label: 'More' },
+        { to: '/gallery', icon: Menu, label: 'More' },
       ].map(tab => (
         <NavLink key={tab.to} to={tab.to} className={({isActive}) => cn("flex flex-col items-center gap-1 w-16 focus-ring rounded p-1", isActive ? "text-text" : "text-muted hover:text-text")}>
           <tab.icon className="w-5 h-5" />
