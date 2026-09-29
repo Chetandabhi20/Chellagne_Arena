@@ -14,7 +14,12 @@
     <meta name="twitter:card" content="summary_large_image" />
     <script>
       try {
-        var theme = localStorage.getItem('gitclub-arena:theme');
+        var stored = localStorage.getItem('gitclub-arena:v1');
+        var theme = null;
+        if (stored) {
+          var parsed = JSON.parse(stored);
+          theme = parsed.state && parsed.state.theme;
+        }
         if (theme === 'light' || theme === 'dark') {
           document.documentElement.setAttribute('data-theme', theme);
         } else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
