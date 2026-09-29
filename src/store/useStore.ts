@@ -33,6 +33,8 @@ export interface AppState {
   toggleNotify: (challengeId: string) => void;
   setOrganizerMode: (on: boolean) => void;
   approveSubmission: (submissionId: string) => void;
+  requestChanges: (submissionId: string) => void;
+  toggleUpvote: (submissionId: string, userId: string) => void;
   addCustomChallenge: (challenge: Challenge) => void;
   resetDemo: () => void;
   updateProfile: (name: string, id: string) => void;
@@ -153,6 +155,44 @@ export const useStore = create<AppState>()(
             sub.id === submissionId ? { ...sub, approvedAt: Date.now() } : sub
           ),
         })),
+
+      requestChanges: (submissionId) =>
+        set((state) => {
+          const sub = state.submissions.find((s) => s.id === submissionId);
+          if (!sub) return state;
+          
+          return {
+            submissions: state.submissions.map((s) =>
+              s.id === submissionId
+                ? {
+                    ...s,
+                    result: { passed: false, scoreFraction: 0, feedback: ['Changes requested by reviewer'] },
+                  }
+                : s
+            ),
+            checkouts: {
+              ...state.checkouts,
+              [sub.challengeId]: {
+                ...state.checkouts[sub.challengeId],
+                attemptsUsed: Math.max(0, (state.checkouts[sub.challengeId]?.attemptsUsed || 1) - 1),
+              },
+            },
+          };
+        }),
+
+      toggleUpvote: (submissionId, userId) =>
+        set((state) => {
+          const voters = state.upvotes[submissionId] || [];
+          const hasVoted = voters.includes(userId);
+          return {
+            upvotes: {
+              ...state.upvotes,
+              [submissionId]: hasVoted
+                ? voters.filter((id) => id !== userId)
+                : [...voters, userId],
+            },
+          };
+        }),
 
       addCustomChallenge: (challenge) =>
         set((state) => ({
