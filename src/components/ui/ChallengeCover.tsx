@@ -1,11 +1,12 @@
-import { useReducedMotion } from 'framer-motion';
-import { motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { useReducedMotion, motion, useMotionValue, useTransform, useSpring } from 'framer-motion';
 import { djb2, mulberry32 } from '../../lib/hash';
 
 export function ChallengeCover({ slug, size = 'sm' }: { slug: string; size?: 'sm' | 'lg' }) {
   const reduced = useReducedMotion();
   const mouseX = useMotionValue(0.5);
   const mouseY = useMotionValue(0.5);
+  const [isHovered, setIsHovered] = useState(false);
 
   const springConfig = { damping: 25, stiffness: 150 };
   const smoothX = useSpring(mouseX, springConfig);
@@ -52,10 +53,29 @@ export function ChallengeCover({ slug, size = 'sm' }: { slug: string; size?: 'sm
     </svg>
   );
 
+  useEffect(() => {
+    if (reduced || isHovered) return;
+    
+    let frameId: number;
+    // Base t on slug hash so cards animate differently
+    let t = (rng() * 1000); 
+    
+    const animate = () => {
+      t += 0.01;
+      mouseX.set(0.5 + Math.sin(t) * 0.2);
+      mouseY.set(0.5 + Math.cos(t * 0.8) * 0.2);
+      frameId = requestAnimationFrame(animate);
+    };
+    
+    frameId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frameId);
+  }, [reduced, isHovered, mouseX, mouseY]);
+
   return (
     <div 
       className="relative w-full overflow-hidden border-b border-border bg-panel-2" 
       style={{ height, transformStyle: 'preserve-3d' }}
+      onMouseEnter={() => setIsHovered(true)}
       onMouseMove={(e) => {
         if (reduced) return;
         const rect = e.currentTarget.getBoundingClientRect();
@@ -63,6 +83,13 @@ export function ChallengeCover({ slug, size = 'sm' }: { slug: string; size?: 'sm
         mouseY.set((e.clientY - rect.top) / rect.height);
       }}
       onMouseLeave={() => {
+        setIsHovered(false);
+        mouseX.set(0.5);
+        mouseY.set(0.5);
+      }}
+      onTouchStart={() => setIsHovered(true)}
+      onTouchEnd={() => {
+        setIsHovered(false);
         mouseX.set(0.5);
         mouseY.set(0.5);
       }}

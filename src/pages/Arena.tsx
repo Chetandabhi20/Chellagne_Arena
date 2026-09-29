@@ -118,7 +118,7 @@ export default function Arena() {
           <p className="text-muted text-lg max-w-xl">
             Weekly challenges from Git Club CHARUSAT. Solve them in your browser, open a pull request, earn XP.
           </p>
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-4">
             <Button variant="primary" onClick={() => document.getElementById('grid')?.scrollIntoView({ behavior: 'smooth' })}>
               Browse active challenges
             </Button>

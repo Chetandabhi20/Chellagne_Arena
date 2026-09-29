@@ -4,33 +4,33 @@
 
 @layer base {
   :root {
-    /* Light theme tokens */
-    --bg: #F6F4EE;
+    /* Light theme tokens (GitHub-inspired) */
+    --bg: #F6F8FA;
     --panel: #FFFFFF;
-    --panel-2: #EFECE3;
-    --border: #DDD8CB;
-    --text: #16201B;
-    --muted: #5C6B63;
-    --accent: #D63E22;
+    --panel-2: #F3F4F6;
+    --border: #D0D7DE;
+    --text: #1F2328;
+    --muted: #656D76;
+    --accent: #F05032; /* Git Orange/Red */
     --accent-fg: #FFFFFF;
-    --success: #127A4E;
-    --warning: #9A6400;
-    --danger: #C62F2F;
+    --success: #1A7F37;
+    --warning: #9A6700;
+    --danger: #D1242F;
   }
 
   :root[data-theme="dark"] {
-    /* Dark theme tokens */
-    --bg: #0B0F0E;
-    --panel: #131A17;
-    --panel-2: #192320;
-    --border: #22302A;
-    --text: #E6EDE8;
-    --muted: #8A9A92;
-    --accent: #F05133;
-    --accent-fg: #0B0F0E;
-    --success: #3DDC97;
-    --warning: #FFB020;
-    --danger: #FF5C5C;
+    /* Dark theme tokens (GitHub-inspired) */
+    --bg: #0D1117;
+    --panel: #161B22;
+    --panel-2: #21262D;
+    --border: #30363D;
+    --text: #E6EDF3;
+    --muted: #848D97;
+    --accent: #F05032;
+    --accent-fg: #FFFFFF;
+    --success: #238636;
+    --warning: #D29922;
+    --danger: #F85149;
   }
 
   body {
