@@ -123,7 +123,7 @@ export default function Gallery() {
         {items.map((item) => (
           <Card key={item.id} className="flex flex-col overflow-hidden">
             <div className="h-40 shrink-0">
-              <ChallengeCover slug={item.id} size="sm" />
+              <ChallengeCover slug={item.slug} size="sm" />
             </div>
             <div className="p-4 flex flex-col flex-1">
               <h3 className="font-mono text-lg font-bold text-text truncate" title={item.challengeTitle}>

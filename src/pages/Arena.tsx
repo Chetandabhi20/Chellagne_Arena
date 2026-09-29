@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useStore } from '../store/useStore';
 import { challenges, seedActivity } from '../data';
 import { challengeStatus } from '../lib/selectors';
@@ -20,6 +20,7 @@ import type { Challenge } from '../types';
 
 export default function Arena() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [howItWorksOpen, setHowItWorksOpen] = useState(false);
   const [loading, setLoading] = useState(true);
 
@@ -29,8 +30,11 @@ export default function Arena() {
     checkouts, 
     dailyResults, 
     activity, 
-    settings 
+    settings,
+    customChallenges
   } = useStore();
+
+  const allChallenges = useMemo(() => [...challenges, ...(customChallenges || [])], [customChallenges]);
 
   // On mount simulate network delay for skeleton (300ms) per SPEC
   useEffect(() => {
@@ -67,12 +71,12 @@ export default function Arena() {
   const hasFilters = diffParam !== 'all' || typeParam !== 'all' || qParam !== '';
 
   // Filter challenges
-  const activeCount = challenges.filter((c: Challenge) => challengeStatus(c, now) === 'active').length;
-  const upcomingCount = challenges.filter((c: Challenge) => challengeStatus(c, now) === 'upcoming').length;
-  const completedCount = challenges.filter((c: Challenge) => challengeStatus(c, now) === 'completed').length;
+  const activeCount = allChallenges.filter((c: Challenge) => challengeStatus(c, now) === 'active').length;
+  const upcomingCount = allChallenges.filter((c: Challenge) => challengeStatus(c, now) === 'upcoming').length;
+  const completedCount = allChallenges.filter((c: Challenge) => challengeStatus(c, now) === 'completed').length;
 
   const filteredChallenges = useMemo(() => {
-    return challenges.filter((c: Challenge) => {
+    return allChallenges.filter((c: Challenge) => {
       const st = challengeStatus(c, now);
       if (statusParam !== 'all' && st !== statusParam) return false;
       if (diffParam !== 'all' && c.difficulty !== diffParam) return false;
@@ -94,13 +98,13 @@ export default function Arena() {
       if (aClose === bClose) return new Date(a.opensAt).getTime() - new Date(b.opensAt).getTime();
       return aClose - bClose;
     });
-  }, [statusParam, diffParam, typeParam, qParam, sortParam, now]);
+  }, [statusParam, diffParam, typeParam, qParam, sortParam, now, allChallenges]);
 
   // Hero Stats
-  const activeChallenges = challenges.filter((c: Challenge) => challengeStatus(c, now) === 'active');
+  const activeChallenges = allChallenges.filter((c: Challenge) => challengeStatus(c, now) === 'active');
   const soonest = [...activeChallenges].sort((a, b) => new Date(a.closesAt).getTime() - new Date(b.closesAt).getTime())[0];
   const participantsCount = 18 + 1; // 18 seeds + you
-  const thisWeekXp = earnedXp(submissions, challenges, dailyResults, now, settings.demoAutoMerge); // simplification for hero stat
+  const thisWeekXp = earnedXp(submissions, allChallenges, dailyResults, now, settings.demoAutoMerge); // simplification for hero stat
 
   // Recent Activity
   const combinedActivity = useMemo(() => {
@@ -162,7 +166,7 @@ export default function Arena() {
                 <div className="text-xs text-muted">3 questions · +20 XP</div>
               </div>
             </div>
-            <Button size="sm" onClick={() => window.location.href = '/daily'}>
+            <Button size="sm" onClick={() => navigate('/daily')}>
               Play
             </Button>
           </div>
@@ -190,6 +194,15 @@ export default function Arena() {
               onChange={(e) => updateParam('q', e.target.value)}
               className="px-3 py-1.5 bg-panel border border-border rounded text-sm w-full md:w-64 focus-ring"
             />
+            <select
+              value={sortParam}
+              onChange={(e) => updateParam('sort', e.target.value)}
+              className="px-3 py-1.5 bg-panel border border-border rounded text-sm focus-ring"
+            >
+              <option value="closing">Closing soon</option>
+              <option value="newest">Newest first</option>
+              <option value="points">Most points</option>
+            </select>
           </div>
         </div>
 

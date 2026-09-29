@@ -168,7 +168,7 @@ export const NextActionBar = () => {
         <Icon className="w-4 h-4 text-accent shrink-0" />
         <span className="font-mono text-sm truncate flex-1">{action.title}</span>
         <Link to={action.to}>
-          <Button size="sm" variant="primary" className="shrink-0 hidden sm:flex gap-1">
+          <Button size="sm" variant="primary" className="shrink-0 flex gap-1">
             {action.ctaLabel} <ArrowRight className="w-4 h-4" />
           </Button>
         </Link>

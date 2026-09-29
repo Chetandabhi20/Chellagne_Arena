@@ -20,9 +20,8 @@ export interface RunnerPayload {
 }
 
 const workerCode = `
-importScripts("data:application/javascript,${encodeURIComponent(
-  `self.deepEqual = ${deepEqual.toString()}`
-)}");
+const deepEqual = ${deepEqual.toString()};
+self.deepEqual = deepEqual;
 
 self.onmessage = async (e) => {
   const { code, fnName, tests } = e.data;

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Shell } from './components/layout/Shell';
 import NotFound from './pages/NotFound';
 import { Skeleton } from './components/ui';
@@ -40,8 +40,7 @@ export default function App() {
           <Route path="leaderboard" element={<League />} />
           <Route path="gallery" element={<Suspense fallback={<Skeleton className="h-96 w-full" />}><Gallery /></Suspense>} />
           <Route path="organizer" element={<Suspense fallback={<Skeleton className="h-96 w-full" />}><Organizer /></Suspense>} />
-          <Route path="404" element={<NotFound />} />
-          <Route path="*" element={<Navigate to="/404" replace />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>

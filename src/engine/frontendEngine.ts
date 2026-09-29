@@ -41,6 +41,7 @@ async function runChecks(html: string, css: string, checks: FrontendCheck[]): Pr
     return { passed: false, feedback: ['Failed to load iframe document'] };
   }
 
+  try {
   for (const check of checks) {
     const width = check.viewport ?? 800;
     iframe.style.width = `${width}px`;
@@ -119,8 +120,9 @@ async function runChecks(html: string, css: string, checks: FrontendCheck[]): Pr
       allPassed = false;
     }
   }
-
-  document.body.removeChild(iframe);
+  } finally {
+    if (iframe.parentNode) document.body.removeChild(iframe);
+  }
   return { passed: allPassed, feedback };
 }
 
