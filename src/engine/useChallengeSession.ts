@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useRef } from 'react';
+import { useNow } from '../hooks';
 import { useStore } from '../store/useStore';
 import type { Challenge, Submission } from '../types';
 import type { CheckOutput } from './types';
@@ -7,6 +8,7 @@ import { linkEngine } from './linkEngine';
 import { codeEngine } from './codeEngine';
 import { regexEngine } from './regexEngine';
 import { frontendEngine } from './frontendEngine';
+import { gitTerminalEngine } from './gitTerminalEngine';
 import { challengeStatus, attemptsLeft, bestSubmission, prState, challengeSubmissions } from '../lib/selectors';
 import { toast } from '../components/ui/Toast';
 
@@ -19,7 +21,7 @@ function getEngine(type: Challenge['type']) {
     case 'code': return codeEngine;
     case 'regex': return regexEngine;
     case 'frontend': return frontendEngine;
-    // git-terminal added in later phases
+    case 'git-terminal': return gitTerminalEngine;
     default: return null;
   }
 }
@@ -33,7 +35,7 @@ export function useChallengeSession(challenge: Challenge) {
   const store = useStore();
   const prCounterRef = useRef(0);
 
-  const now = Date.now();
+  const now = useNow(1000);
   const status = challengeStatus(challenge, now);
   const checkout = store.checkouts[challenge.id];
   const isCheckedOut = checkout != null;

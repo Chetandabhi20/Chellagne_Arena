@@ -36,7 +36,7 @@ export default function League() {
 
   const rankings = useMemo(() => {
     const days = activeDays(store.submissions, allChallenges, store.dailyResults, SEED_HEATMAP_OFFSETS, now, store.settings.demoAutoMerge);
-    const myStreak = streak(days, now);
+    const myStreak = streak(days);
     const myTotalXp = earnedXp(store.submissions, allChallenges, store.dailyResults, now, store.settings.demoAutoMerge);
     const myWeeklyXp = weeklyXp(store.submissions, allChallenges, store.dailyResults, now, store.settings.demoAutoMerge);
 

@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useState, useEffect } from 'react';
+import { useMemo, useCallback, useState, useEffect, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { usePageTitle, useNow } from '../hooks';
 import { useStore } from '../store/useStore';
@@ -106,7 +106,7 @@ function ChallengeDetailInner({
     : null;
 
   // Watch for merged state to trigger toast and banner
-  const prevPrStateRef = useMemo(() => ({ current: bestPrState }), []);
+  const prevPrStateRef = useRef(bestPrState);
   useEffect(() => {
     if (prevPrStateRef.current !== 'merged' && bestPrState === 'merged' && bestSub) {
       setShowMergedBanner(true);
@@ -114,8 +114,8 @@ function ChallengeDetailInner({
 
       // Add merged activity
       store.addActivity({
-        id: `act-${Date.now()}-merged`,
-        at: Date.now(),
+        id: `act-${now}-merged`,
+        at: now,
         actor: store.profile.name,
         verb: 'merged',
         challengeSlug: ch.slug,
@@ -123,7 +123,7 @@ function ChallengeDetailInner({
       });
     }
     prevPrStateRef.current = bestPrState;
-  }, [bestPrState, bestSub, ch.slug, store, prevPrStateRef]);
+  }, [bestPrState, bestSub, ch.slug, store, now]);
 
   const handleSubmit = useCallback(async (payload: unknown) => {
     const result = await session.submit(payload);

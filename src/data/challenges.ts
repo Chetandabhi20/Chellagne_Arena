@@ -631,4 +631,37 @@ export const challenges: Challenge[] = [
       prompt: 'Share a link to your Git Club logo redesign. Add one line about your design concept.',
     },
   },
+  {
+    id: 'undo-the-damage',
+    slug: 'undo-the-damage',
+    title: 'Undo the Damage',
+    tagline: 'Oops, wrong branch. Can you fix the history?',
+    category: 'git-tools',
+    difficulty: 'hard',
+    type: 'git-terminal',
+    points: 300,
+    opensAt: new Date(at(+5)).toISOString(), // Upcoming (or I can set to +1)
+    closesAt: new Date(at(+15)).toISOString(),
+    maxAttempts: 5,
+    description: 
+      `You just committed a new feature, but realized you were on the \`main\` branch instead of \`feature/login\`!\n\n` +
+      `Your task is to fix the repository state using the terminal. \n\n` +
+      `Goal: \`main\` should have exactly 2 commits (init, update readme), and \`feature/login\` should contain the third commit (add login form).\n\n` +
+      `Use standard git commands to branch, reset, and cherry-pick. Type \`git help\` for a list of supported commands in this simulator.`,
+    requirements: [
+      'main must have exactly 2 commits (init, update readme)',
+      'feature/login must contain the third commit (add login form)',
+      'The current branch at the end does not matter',
+    ],
+    rules: [
+      'Work alone.',
+      'One pull request per challenge.'
+    ],
+    tags: ['git', 'history', 'reset'],
+    author: 'Git Club Core Team',
+    config: {
+      type: 'git-terminal',
+      scenarioId: 'oops-wrong-branch'
+    }
+  }
 ];

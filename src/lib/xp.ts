@@ -211,7 +211,7 @@ export function activeDays(
  * Streak = count of consecutive active days ending today,
  * or ending yesterday if today is not yet active.
  */
-export function streak(activeDaySet: Set<string>, _now: number = Date.now()): number {
+export function streak(activeDaySet: Set<string>): number {
   const todayMs = startOfToday();
   const todayStr = dateKey(todayMs);
 

@@ -4,7 +4,7 @@ import {
   Lock, ListTodo, Check, X, FileText
 } from 'lucide-react';
 import { useStore } from '../store/useStore';
-import { usePageTitle } from '../hooks';
+import { usePageTitle, useNow } from '../hooks';
 import { 
   Button, Card, Tabs, ChallengeCard, EmptyState, Tag
 } from '../components/ui';
@@ -141,7 +141,7 @@ function NewChallengeTab() {
     } else if (type === 'link') {
       config = { 
         type: 'link', 
-        linkKinds: linkKindsStr.split(',').map(s => s.trim().toLowerCase()) as any,
+        linkKinds: linkKindsStr.split(',').map(s => s.trim().toLowerCase()) as ("github" | "figma" | "demo" | "drive" | "other")[],
         prompt: linkPrompt
       };
     } else if (type === 'quiz') {
@@ -164,7 +164,7 @@ function NewChallengeTab() {
     } else if (type === 'git-terminal') {
        configError = "Git terminal creation is not supported in the form yet.";
     }
-  } catch (e) {
+  } catch {
     configError = "Invalid JSON config";
   }
 
@@ -401,6 +401,7 @@ function NewChallengeTab() {
 
 function ReviewQueueTab() {
   const store = useStore();
+  const now = useNow();
   
   // Find link submissions in-review
   const reviewable = store.submissions.filter((s) => {
@@ -409,7 +410,7 @@ function ReviewQueueTab() {
     if (!c || c.type !== 'link') return false;
     
     // Check if state is in-review
-    const state = prState(s, 'link', Date.now(), store.settings.demoAutoMerge);
+    const state = prState(s, 'link', now, store.settings.demoAutoMerge);
     return state === 'in-review';
   });
 
@@ -471,16 +472,16 @@ function ReviewQueueTab() {
 
 function OverviewTab() {
   const store = useStore();
+  const now = useNow();
   const allChallenges = [...challenges, ...store.customChallenges];
   const activeCount = allChallenges.filter(c => {
-    const now = Date.now();
     return now >= new Date(c.opensAt).getTime() && now <= new Date(c.closesAt).getTime();
   }).length;
   
   const mergedPRs = store.submissions.filter(s => {
     const c = allChallenges.find(ch => ch.id === s.challengeId);
     if (!c) return false;
-    return prState(s, c.type, Date.now(), store.settings.demoAutoMerge) === 'merged';
+    return prState(s, c.type, now, store.settings.demoAutoMerge) === 'merged';
   }).length;
   
   // We use seed 18 + current user = 19

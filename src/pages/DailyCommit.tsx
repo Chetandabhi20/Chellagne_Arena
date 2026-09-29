@@ -9,11 +9,13 @@ import { cn } from '../lib/cn';
 import { streak as calculateStreak, activeDays } from '../lib/xp';
 import { challenges } from '../data/challenges';
 import { SEED_HEATMAP_OFFSETS } from '../data';
+import { useNow } from '../hooks';
 
 export default function DailyCommit() {
   const store = useStore();
   const pick = useMemo(() => dailyPick(dailyPool), []);
-  const todayKey = dateKey(Date.now());
+  const now = useNow();
+  const todayKey = dateKey(now);
   const existingResult = store.dailyResults.find(r => r.dateKey === todayKey);
 
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -83,7 +85,7 @@ export default function DailyCommit() {
       try {
         document.execCommand('copy');
         toast({ type: 'success', message: 'Copied to clipboard' });
-      } catch (err) {
+      } catch {
         toast({ type: 'error', message: 'Failed to copy' });
       }
       document.body.removeChild(textArea);
@@ -91,8 +93,8 @@ export default function DailyCommit() {
   };
 
   if (existingResult) {
-    const activeDaySet = activeDays(store.submissions, store.customChallenges.length ? [...challenges, ...store.customChallenges] : challenges, store.dailyResults, SEED_HEATMAP_OFFSETS, Date.now(), store.settings.demoAutoMerge);
-    const currentStreak = calculateStreak(activeDaySet, Date.now());
+    const activeDaySet = activeDays(store.submissions, store.customChallenges.length ? [...challenges, ...store.customChallenges] : challenges, store.dailyResults, SEED_HEATMAP_OFFSETS, now, store.settings.demoAutoMerge);
+    const currentStreak = calculateStreak(activeDaySet);
     const shareText = generateShareText(existingResult, currentStreak);
     
     return (

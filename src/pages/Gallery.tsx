@@ -5,12 +5,13 @@ import { challenges } from '../data/challenges';
 import { gallerySeed } from '../data/gallery';
 import { prState } from '../lib/selectors';
 import { EmptyState, ChallengeCover, Card, Button } from '../components/ui';
-import { usePageTitle } from '../hooks';
+import { usePageTitle, useNow } from '../hooks';
 import { cn } from '../lib/cn';
 
 export default function Gallery() {
   usePageTitle('Gallery');
   const store = useStore();
+  const now = useNow();
   const profileId = store.profile.id;
   const [sortBy, setSortBy] = useState<'votes' | 'newest'>('votes');
 
@@ -55,7 +56,7 @@ export default function Gallery() {
     store.submissions.forEach((sub) => {
       const challenge = galleryChallenges.find((c) => c.id === sub.challengeId);
       if (!challenge) return;
-      const state = prState(sub, challenge.type, Date.now(), store.settings.demoAutoMerge);
+      const state = prState(sub, challenge.type, now, store.settings.demoAutoMerge);
       if (state !== 'merged') return;
       
       const payload = sub.payload as { url?: string; note?: string };
@@ -84,7 +85,7 @@ export default function Gallery() {
     }
 
     return list;
-  }, [galleryChallenges, store.submissions, store.upvotes, store.settings.demoAutoMerge, profileId, store.profile.name, sortBy]);
+  }, [galleryChallenges, store.submissions, store.upvotes, store.settings.demoAutoMerge, profileId, store.profile.name, sortBy, now]);
 
   if (items.length === 0) {
     return (

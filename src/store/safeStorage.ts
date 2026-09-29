@@ -9,7 +9,7 @@ export const safeStorage: StateStorage = {
         const item = window.localStorage.getItem(name);
         return item;
       }
-    } catch (e) {
+    } catch {
       // fallback
     }
     return memoryFallback.get(name) || null;
@@ -20,7 +20,7 @@ export const safeStorage: StateStorage = {
         window.localStorage.setItem(name, value);
         return;
       }
-    } catch (e) {
+    } catch {
       // fallback
     }
     memoryFallback.set(name, value);
@@ -31,7 +31,7 @@ export const safeStorage: StateStorage = {
         window.localStorage.removeItem(name);
         return;
       }
-    } catch (e) {
+    } catch {
       // fallback
     }
     memoryFallback.delete(name);

@@ -8,6 +8,7 @@ const LinkSolver = lazy(() => import('./LinkSolver'));
 const CodeSolver = lazy(() => import('./CodeSolver'));
 const RegexSolver = lazy(() => import('./RegexSolver'));
 const FrontendSolver = lazy(() => import('./FrontendSolver'));
+const GitTerminalSolver = lazy(() => import('./GitTerminalSolver'));
 
 // Placeholder for types not yet implemented
 function NotYetAvailable({ type }: { type: string }) {
@@ -39,7 +40,7 @@ const SOLVER_COMPONENTS: Record<ChallengeType, ComponentType<SolverProps> | null
   code: CodeSolver as unknown as ComponentType<SolverProps>,
   regex: RegexSolver as unknown as ComponentType<SolverProps>,
   frontend: FrontendSolver as unknown as ComponentType<SolverProps>,
-  'git-terminal': null, // P10 stretch
+  'git-terminal': GitTerminalSolver as unknown as ComponentType<SolverProps>,
 };
 
 export function SolverPanel(props: SolverProps) {

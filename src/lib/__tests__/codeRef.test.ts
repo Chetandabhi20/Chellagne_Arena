@@ -20,30 +20,35 @@ function deepEqual(a: unknown, b: unknown): boolean {
   return false;
 }
 
-const refSolutions: Record<string, (...args: any[]) => unknown> = {
-  mergeSorted: (a: number[], b: number[]) => {
+const refSolutions: Record<string, (...args: unknown[]) => unknown> = {
+  mergeSorted: (a: unknown, b: unknown) => {
+    const arrA = a as number[];
+    const arrB = b as number[];
     const result = [];
     let i = 0, j = 0;
-    while (i < a.length && j < b.length) {
-      if (a[i] <= b[j]) result.push(a[i++]);
-      else result.push(b[j++]);
+    while (i < arrA.length && j < arrB.length) {
+      if (arrA[i] <= arrB[j]) result.push(arrA[i++]);
+      else result.push(arrB[j++]);
     }
-    while (i < a.length) result.push(a[i++]);
-    while (j < b.length) result.push(b[j++]);
+    while (i < arrA.length) result.push(arrA[i++]);
+    while (j < arrB.length) result.push(arrB[j++]);
     return result;
   },
-  twoSum: (commits: number[], target: number) => {
+  twoSum: (commits: unknown, target: unknown) => {
+    const arr = commits as number[];
+    const tgt = target as number;
     const map = new Map<number, number>();
-    for (let i = 0; i < commits.length; i++) {
-      const complement = target - commits[i];
+    for (let i = 0; i < arr.length; i++) {
+      const complement = tgt - arr[i];
       if (map.has(complement)) return [map.get(complement), i];
-      map.set(commits[i], i);
+      map.set(arr[i], i);
     }
     return [];
   },
-  cartTotal: (items: any[]) => {
+  cartTotal: (items: unknown) => {
+    const arr = items as { price: number; discountPercent?: number; qty: number }[];
     let total = 0;
-    for (const item of items) {
+    for (const item of arr) {
       let price = item.price * item.qty;
       if (item.discountPercent) {
         price = price * (1 - item.discountPercent / 100);

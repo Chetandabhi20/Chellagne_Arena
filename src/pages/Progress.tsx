@@ -15,7 +15,7 @@ import { cn } from '../lib/cn';
 
 const XPChart = React.lazy(() => import('../components/XPChart'));
 
-const ICON_MAP: Record<string, any> = {
+const ICON_MAP: Record<string, React.ElementType> = {
   'git-merge': GitMerge,
   'trophy': Trophy,
   'regex': Regex,
@@ -41,7 +41,7 @@ export default function Progress() {
   const progress = levelProgress(xp);
   
   const days = activeDays(store.submissions, allChallenges, store.dailyResults, SEED_HEATMAP_OFFSETS, now, store.settings.demoAutoMerge);
-  const currentStreak = streak(days, now);
+  const currentStreak = streak(days);
 
   const rankings = computeRankings(participants, {
     id: store.profile.id,

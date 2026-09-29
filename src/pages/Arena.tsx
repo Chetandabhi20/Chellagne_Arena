@@ -5,6 +5,7 @@ import { challenges, seedActivity } from '../data';
 import { challengeStatus } from '../lib/selectors';
 import { earnedXp } from '../lib/xp';
 import { formatRelative } from '../lib/time';
+import { useNow } from '../hooks';
 import { commitHash } from '../lib/hash';
 import { 
   Button, 
@@ -37,7 +38,7 @@ export default function Arena() {
     return () => clearTimeout(timer);
   }, []);
 
-  const now = Date.now();
+  const now = useNow(60000);
 
   // Read URL params
   const statusParam = searchParams.get('status') || 'active';

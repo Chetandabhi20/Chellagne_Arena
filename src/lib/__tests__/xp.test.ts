@@ -62,27 +62,27 @@ describe('Streak', () => {
   const d = (offset: number) => dateKey(today + offset * 86_400_000);
 
   it('returns 0 for no active days', () => {
-    expect(streak(new Set(), today)).toBe(0);
+    expect(streak(new Set())).toBe(0);
   });
 
   it('returns 1 if only today is active', () => {
-    expect(streak(new Set([d(0)]), today)).toBe(1);
+    expect(streak(new Set([d(0)]))).toBe(1);
   });
 
   it('returns 1 if today is inactive but yesterday active', () => {
-    expect(streak(new Set([d(-1)]), today)).toBe(1);
+    expect(streak(new Set([d(-1)]))).toBe(1);
   });
 
   it('returns 0 if today and yesterday are inactive', () => {
-    expect(streak(new Set([d(-2)]), today)).toBe(0);
+    expect(streak(new Set([d(-2)]))).toBe(0);
   });
 
   it('returns 3 for 3 consecutive days ending today', () => {
-    expect(streak(new Set([d(0), d(-1), d(-2)]), today)).toBe(3);
+    expect(streak(new Set([d(0), d(-1), d(-2)]))).toBe(3);
   });
 
   it('returns 3 for 3 consecutive days ending yesterday', () => {
-    expect(streak(new Set([d(-1), d(-2), d(-3)]), today)).toBe(3);
+    expect(streak(new Set([d(-1), d(-2), d(-3)]))).toBe(3);
   });
 });
 

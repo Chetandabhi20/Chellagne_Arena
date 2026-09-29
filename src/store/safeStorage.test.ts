@@ -2,19 +2,19 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { safeStorage } from './safeStorage';
 
 describe('safeStorage', () => {
-  let localStorageMock: any;
-
+  let localStorageMock: { getItem: ReturnType<typeof vi.fn>; setItem: ReturnType<typeof vi.fn>; removeItem: ReturnType<typeof vi.fn> };
+  
   beforeEach(() => {
     localStorageMock = {
       getItem: vi.fn(),
       setItem: vi.fn(),
       removeItem: vi.fn(),
     };
-    (globalThis as any).window = { localStorage: localStorageMock };
+    (globalThis as unknown as { window: { localStorage: typeof localStorageMock } }).window = { localStorage: localStorageMock };
   });
 
   afterEach(() => {
-    delete (globalThis as any).window;
+    delete (globalThis as unknown as { window?: { localStorage: typeof localStorageMock } }).window;
   });
 
   it('uses localStorage when available', () => {

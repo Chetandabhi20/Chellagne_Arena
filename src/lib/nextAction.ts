@@ -55,7 +55,7 @@ export function getNextAction(params: {
     dailyResults,
     participants,
     // @ts-expect-error unused param that is part of the API
-  dailyPool,
+  _dailyPool,
     seedHeatmapOffsets,
     profile,
     demoAutoMerge,
@@ -148,7 +148,7 @@ export function getNextAction(params: {
   // Rule 4: Daily Commit not done today
   if (!isDailyDoneToday(dailyResults, now)) {
     const days = activeDays(submissions, challenges, dailyResults, seedHeatmapOffsets, now, demoAutoMerge);
-    const currentStreak = computeStreak(days, now);
+    const currentStreak = computeStreak(days);
 
     const streakText = currentStreak > 0
       ? `Keep your ${currentStreak}-day streak: today's Daily Commit, +20 XP`
@@ -166,7 +166,7 @@ export function getNextAction(params: {
   // Rule 5: XP gap to the next rank up is ≤ 100
   const totalXp = earnedXp(submissions, challenges, dailyResults, now, demoAutoMerge);
   const days = activeDays(submissions, challenges, dailyResults, seedHeatmapOffsets, now, demoAutoMerge);
-  const currentStreak = computeStreak(days, now);
+  const currentStreak = computeStreak(days);
 
   const rankings = computeRankings(participants, {
     id: profile.id,
